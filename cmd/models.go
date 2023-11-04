@@ -68,7 +68,6 @@ func readSingleTask(id string) error {
 		return err
 	}
 
-
 	// small app, don't really care about optimization
 	for _, task := range tasks {
 		if task.Id == id {
@@ -78,6 +77,41 @@ func readSingleTask(id string) error {
 	}
 
 	fmt.Printf("Could not find task with ID: %s\n", id)
+
+	return nil
+
+}
+
+func deleteTask(id string) error {
+	tasks, err := loadTasksFromFile()
+	var result []Task
+
+	if err != nil {
+		fmt.Println("Error loading file from db:", err)
+
+		return err
+	}
+
+	for _, task := range tasks {
+		if task.Id != id {
+			result = append(result, task)
+		}
+	}
+
+	updatedData, err := json.MarshalIndent(result, "", "    ")
+	if err != nil {
+		fmt.Println("Error marshaling JSON:", err)
+		return err
+	}
+
+	// Write the updated JSON data back to the file
+	err = os.WriteFile("tasks.json", updatedData, 0644)
+
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return err
+	}
+	fmt.Printf("Task with ID:%s has been deleted from tasks.json successfully.", id)
 
 	return nil
 

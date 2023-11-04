@@ -6,7 +6,7 @@ import (
 
 var deleteSingleCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Read all tasks",
+	Short: "Delete a task",
 	Run: func(cmd *cobra.Command, args []string) {
 		id := args[0]
 		deleteTask(id)

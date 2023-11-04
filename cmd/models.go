@@ -10,9 +10,10 @@ import (
 )
 
 type Task struct {
-	Id       string    `json:"id"`
-	Title    string    `json:"title"`
-	Duration time.Time `json:"deadline"`
+	Id        string    `json:"id"`
+	Title     string    `json:"title"`
+	Duration  time.Time `json:"deadline"`
+	Completed bool      `json:"completed"`
 }
 
 func generateGoogleUUID() string {
@@ -59,24 +60,74 @@ func readAllTasks() error {
 
 }
 
-func readSingleTask(id string) error {
+func readSingleTaskHelper(id string) (*Task, error) {
 	tasks, err := loadTasksFromFile()
 
 	if err != nil {
 		fmt.Println("Error loading file from db:", err)
-
-		return err
+		return nil, err
 	}
 
 	// small app, don't really care about optimization
 	for _, task := range tasks {
 		if task.Id == id {
-			fmt.Printf("ID: %s \nTitle: %s \nDeadline: %s\n\n", task.Id, task.Title, task.Duration)
-			return nil
+			return &task, nil
 		}
 	}
+	return nil, nil
+}
 
-	fmt.Printf("Could not find task with ID: %s\n", id)
+func readSingleTask(id string) error {
+	task, err := readSingleTaskHelper(id)
+
+	if err != nil {
+		fmt.Println("Error loading file from db:", err)
+		return err
+	}
+
+	if task == nil {
+		fmt.Printf("Could not find task with ID: %s\n", id)
+		return nil
+	}
+
+	fmt.Printf("ID: %s \nTitle: %s \nDeadline: %s\n\n", task.Id, task.Title, task.Duration)
+
+	return nil
+
+}
+
+func markTaskAsCompleted(id string) error {
+
+	tasks, err := loadTasksFromFile()
+	if err != nil {
+		fmt.Println("Error loading file from db:", err)
+		return err
+	}
+	currentTask, err := readSingleTaskHelper(id)
+
+	if currentTask == nil {
+		fmt.Printf("Could not find task with ID: %s\n", id)
+		return nil
+	}
+
+	if err != nil {
+		fmt.Println("Error finding task:", err)
+		return err
+	}
+
+	result := removeTaskFromArray(tasks, id)
+
+	currentTask.Completed = true
+	result = append(result, *currentTask)
+
+	err = writeTasksToFile(result)
+
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return err
+	}
+
+	fmt.Printf("Task with ID:%s has been marked as completed.", id)
 
 	return nil
 
@@ -84,7 +135,6 @@ func readSingleTask(id string) error {
 
 func deleteTask(id string) error {
 	tasks, err := loadTasksFromFile()
-	var result []Task
 
 	if err != nil {
 		fmt.Println("Error loading file from db:", err)
@@ -92,25 +142,15 @@ func deleteTask(id string) error {
 		return err
 	}
 
-	for _, task := range tasks {
-		if task.Id != id {
-			result = append(result, task)
-		}
-	}
+	result := removeTaskFromArray(tasks, id)
 
-	updatedData, err := json.MarshalIndent(result, "", "    ")
-	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return err
-	}
-
-	// Write the updated JSON data back to the file
-	err = os.WriteFile("tasks.json", updatedData, 0644)
+	err = writeTasksToFile(result)
 
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
 		return err
 	}
+
 	fmt.Printf("Task with ID:%s has been deleted from tasks.json successfully.", id)
 
 	return nil
@@ -128,9 +168,10 @@ func saveTasksToFile(title, durationStr string) error {
 	}
 
 	task := Task{
-		Id:       generateGoogleUUID(),
-		Title:    title,
-		Duration: duration,
+		Id:        generateGoogleUUID(),
+		Title:     title,
+		Duration:  duration,
+		Completed: false,
 	}
 
 	file, err := os.OpenFile("tasks.json", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
@@ -159,14 +200,7 @@ func saveTasksToFile(title, durationStr string) error {
 
 	tasks = append(tasks, task)
 
-	updatedData, err := json.MarshalIndent(tasks, "", "    ")
-	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return err
-	}
-
-	// Write the updated JSON data back to the file
-	err = os.WriteFile("tasks.json", updatedData, 0644)
+	err = writeTasksToFile(tasks)
 
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
@@ -188,4 +222,35 @@ func parseDuration(input string) (time.Time, error) {
 	resultTime := referenceTime.Add(duration)
 
 	return resultTime, nil
+}
+
+func removeTaskFromArray(tasks []Task, id string) []Task {
+	var result []Task
+
+	for _, task := range tasks {
+		if task.Id != id {
+			result = append(result, task)
+		}
+	}
+
+	return result
+
+}
+
+func writeTasksToFile(tasks []Task) error {
+	updatedData, err := json.MarshalIndent(tasks, "", "    ")
+	if err != nil {
+		fmt.Println("Error marshaling JSON:", err)
+		return err
+	}
+
+	// Write the updated JSON data back to the file
+	err = os.WriteFile("tasks.json", updatedData, 0644)
+
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return err
+	}
+
+	return nil
 }

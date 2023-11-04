@@ -6,7 +6,7 @@ import (
 
 var readSingleCmd = &cobra.Command{
 	Use:   "view",
-	Short: "Read all tasks",
+	Short: "Read a single task",
 	Run: func(cmd *cobra.Command, args []string) {
 		id := args[0]
 		readSingleTask(id)

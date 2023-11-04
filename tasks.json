@@ -1,7 +1,14 @@
 [
-  {
-    "id": "8e47662b-2bae-4712-b853-b928e297a75d",
-    "title": "Buy groceries",
-    "deadline": "2023-11-04T02:34:33.395076+01:00"
-  }
+    {
+        "id": "c3dc31dd-5923-4f31-a0b9-e8712382dfec",
+        "title": "Buy groceries",
+        "deadline": "2023-11-04T11:32:07.935475+01:00",
+        "completed": true
+    },
+    {
+        "id": "8e47662b-2bae-4712-b853-b928e297a75d",
+        "title": "Buy groceries",
+        "deadline": "2023-11-04T02:34:33.395076+01:00",
+        "completed": true
+    }
 ]

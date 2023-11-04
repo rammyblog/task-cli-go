@@ -21,6 +21,6 @@ var markTaskAsCompletedCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(markTaskAsCompletedCmd)
-	markTaskAsCompletedCmd.Flags().StringP("id", "id", "", "ID of the task (required)")
+	markTaskAsCompletedCmd.Flags().StringP("id", "i", "", "ID of the task (required)")
 
 }

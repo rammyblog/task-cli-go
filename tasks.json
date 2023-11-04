@@ -1,26 +1,20 @@
 [
-  {
-    "id": "c3dc31dd-5923-4f31-a0b9-e8712382dfec",
-    "title": "Buy groceries",
-    "deadline": "2023-11-04T11:32:07.935475+01:00",
-    "completed": true
-  },
-  {
-    "id": "8e47662b-2bae-4712-b853-b928e297a75d",
-    "title": "Buy groceries",
-    "deadline": "2023-11-04T02:34:33.395076+01:00",
-    "completed": true
-  },
-  {
-    "id": "dad5cf0f-c014-4515-8806-4d0997afcb8a",
-    "title": "Get",
-    "deadline": "2023-11-04T12:04:20.904003+01:00",
-    "completed": false
-  },
-  {
-    "id": "ec969356-0521-408a-bc52-72a953b3b095",
-    "title": "Get Rich",
-    "deadline": "2023-11-04T12:04:40.270391+01:00",
-    "completed": false
-  }
+    {
+        "id": "c3dc31dd-5923-4f31-a0b9-e8712382dfec",
+        "title": "Buy groceries",
+        "deadline": "2023-11-04T11:32:07.935475+01:00",
+        "completed": true
+    },
+    {
+        "id": "8e47662b-2bae-4712-b853-b928e297a75d",
+        "title": "Buy groceries",
+        "deadline": "2023-11-04T02:34:33.395076+01:00",
+        "completed": true
+    },
+    {
+        "id": "ec969356-0521-408a-bc52-72a953b3b095",
+        "title": "Get Rich",
+        "deadline": "2023-11-04T12:04:40.270391+01:00",
+        "completed": false
+    }
 ]

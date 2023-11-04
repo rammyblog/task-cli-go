@@ -21,6 +21,6 @@ var readSingleCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(readSingleCmd)
-	readSingleCmd.Flags().StringP("id", "id", "", "ID of the task (required)")
+	readSingleCmd.Flags().StringP("id", "i", "", "ID of the task (required)")
 
 }

@@ -133,8 +133,7 @@ func markTaskAsCompleted(id string) error {
 
 }
 
-
-func editTask(id string) error {
+func editTaskInDb(id, title, deadline string) error {
 
 	tasks, err := loadTasksFromFile()
 	if err != nil {
@@ -155,7 +154,15 @@ func editTask(id string) error {
 
 	result := removeTaskFromArray(tasks, id)
 
-	currentTask.Completed = true
+	if title != "" {
+		currentTask.Title = title
+	}
+
+	if deadline != "" {
+		duration, _ := parseDuration(deadline)
+		currentTask.Duration = duration
+	}
+
 	result = append(result, *currentTask)
 
 	err = writeTasksToFile(result)
@@ -165,7 +172,7 @@ func editTask(id string) error {
 		return err
 	}
 
-	fmt.Printf("Task with ID:%s has been marked as completed.", id)
+	fmt.Printf("Task with ID:%s has been edited successfully.\n", id)
 
 	return nil
 

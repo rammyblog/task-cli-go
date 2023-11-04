@@ -21,6 +21,6 @@ var deleteSingleCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(deleteSingleCmd)
-	deleteSingleCmd.Flags().StringP("id", "id", "", "ID of the task (required)")
+	deleteSingleCmd.Flags().StringP("id", "i", "", "ID of the task (required)")
 
 }

@@ -133,6 +133,44 @@ func markTaskAsCompleted(id string) error {
 
 }
 
+
+func editTask(id string) error {
+
+	tasks, err := loadTasksFromFile()
+	if err != nil {
+		fmt.Println("Error loading file from db:", err)
+		return err
+	}
+	currentTask, err := readSingleTaskHelper(id)
+
+	if currentTask == nil {
+		fmt.Printf("Could not find task with ID: %s\n", id)
+		return nil
+	}
+
+	if err != nil {
+		fmt.Println("Error finding task:", err)
+		return err
+	}
+
+	result := removeTaskFromArray(tasks, id)
+
+	currentTask.Completed = true
+	result = append(result, *currentTask)
+
+	err = writeTasksToFile(result)
+
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return err
+	}
+
+	fmt.Printf("Task with ID:%s has been marked as completed.", id)
+
+	return nil
+
+}
+
 func deleteTask(id string) error {
 	tasks, err := loadTasksFromFile()
 

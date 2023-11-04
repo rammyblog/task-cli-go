@@ -21,7 +21,7 @@ func generateGoogleUUID() string {
 }
 
 // Read tasks from a file
-func loadTasksFromFile() error {
+func loadTasksFromFile() ([]Task, error) {
 
 	var tasks []Task
 
@@ -30,17 +30,54 @@ func loadTasksFromFile() error {
 	if err != nil && !os.IsNotExist(err) {
 		// Handle error, unless the file doesn't exist yet
 		fmt.Println("Error reading file:", err)
-		return nil
+		return nil, nil
 	}
 
 	if err := json.Unmarshal(data, &tasks); err != nil {
 		fmt.Println("Error unmarshaling JSON data:", err)
+		return nil, err
+	}
+
+	return tasks, nil
+
+}
+
+func readAllTasks() error {
+	tasks, err := loadTasksFromFile()
+
+	if err != nil {
+		fmt.Println("Error loading file from db:", err)
+
 		return err
 	}
 
 	for _, task := range tasks {
 		fmt.Printf("ID: %s \nTitle: %s \nDeadline: %s\n\n", task.Id, task.Title, task.Duration)
 	}
+
+	return nil
+
+}
+
+func readSingleTask(id string) error {
+	tasks, err := loadTasksFromFile()
+
+	if err != nil {
+		fmt.Println("Error loading file from db:", err)
+
+		return err
+	}
+
+
+	// small app, don't really care about optimization
+	for _, task := range tasks {
+		if task.Id == id {
+			fmt.Printf("ID: %s \nTitle: %s \nDeadline: %s\n\n", task.Id, task.Title, task.Duration)
+			return nil
+		}
+	}
+
+	fmt.Printf("Could not find task with ID: %s\n", id)
 
 	return nil
 

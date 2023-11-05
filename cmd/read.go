@@ -5,7 +5,7 @@ import (
 )
 
 var readCmd = &cobra.Command{
-	Use:   "view",
+	Use:   "view-all",
 	Short: "Read all tasks",
 	Run: func(cmd *cobra.Command, args []string) {
 		readAllTasks()
